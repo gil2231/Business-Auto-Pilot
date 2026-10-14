@@ -4,7 +4,7 @@
 Each line of data/jobs.jsonl is one posting. Short keys keep the data file compact:
   co, title, cat, ind, loc, mode, base, ote, var, b_lo, b_hi, o_lo, o_hi (in $K),
   src_ev, yrs, ng, tr, why, fit, hire, grow, apply, src, status, ver, dl, flags,
-  next, stretch, ecom, vl, revisit
+  next, stretch, ecom, vl, revisit, comm (commission exists but amount undisclosed)
 """
 import csv
 import hashlib
@@ -80,6 +80,8 @@ def tier(r):
             return "C ($90K-$99K OTE)"
     elif b_mid is not None and b_mid >= 90:
         return "D (Salary $90K+, no OTE disclosed)"
+    elif b_mid is not None and r.get("comm"):
+        return "Unverified"  # base below $90K plus commission whose size is not disclosed
     if top is None:
         return "Unverified"
     if top >= 90:
