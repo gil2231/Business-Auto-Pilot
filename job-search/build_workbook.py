@@ -31,7 +31,10 @@ CATEGORIES = {
     "D": "AdTech / MarTech / creator commerce",
     "E": "Consumer, fashion & marketplaces",
     "F": "Other high-upside commercial",
+    "I": "Internship (winter/spring 2027)",
 }
+INTERN_BAR = 35  # $/hr - internships below this are excluded as not "elite"
+LATER = "Needs prior sales/SDR experience"
 
 
 def norm_company(name):
@@ -69,6 +72,15 @@ def mid(lo, hi):
 
 
 def tier(r):
+    if r.get("cat") == "I":
+        h = mid(r.get("hr_lo"), r.get("hr_hi"))
+        if h is None:
+            return "Unverified"
+        if h >= 45:
+            return "Elite internship ($45+/hr)"
+        if h >= INTERN_BAR:
+            return f"Strong internship (${INTERN_BAR}-$44/hr)"
+        return "Below target"
     o_mid, b_mid = mid(r.get("o_lo"), r.get("o_hi")), mid(r.get("b_lo"), r.get("b_hi"))
     top = max([v for v in (r.get("o_hi"), r.get("o_lo"), r.get("b_hi"), r.get("b_lo")) if isinstance(v, (int, float))], default=None)
     if o_mid is not None:
@@ -90,6 +102,11 @@ def tier(r):
 
 
 def comp_score(r):
+    if r.get("cat") == "I":
+        h = mid(r.get("hr_lo"), r.get("hr_hi"))
+        if h is None:
+            return 4.0
+        return next(s for f, s in ((55, 10), (50, 9.5), (45, 9), (40, 8), (35, 7), (0, 3)) if h >= f)
     o_mid, b_mid = mid(r.get("o_lo"), r.get("o_hi")), mid(r.get("b_lo"), r.get("b_hi"))
     if o_mid is None and b_mid is None:
         return 4.0
@@ -131,6 +148,8 @@ COLUMNS = [
     ("OTE Midpoint ($K, sortable)", "o_mid", 11),
     ("Salary Source & Evidence", "src_ev", 34),
     ("Required Years of Experience", "yrs", 14),
+    ("Experience Level", "lvl", 18),
+    ("Internship Start / Term", "term", 16),
     ("New Grad / 2027 Eligibility & Start Date", "ng", 28),
     ("Transferable Experience Accepted?", "tr", 22),
     ("Why It Fits Me", "why", 40),
@@ -161,6 +180,9 @@ def enrich(r):
     r["b_mid"] = mid(r.get("b_lo"), r.get("b_hi"))
     r["o_mid"] = mid(r.get("o_lo"), r.get("o_hi"))
     r["base_txt"] = r.get("base") or money(r.get("b_lo"), r.get("b_hi")) or "Not disclosed"
+    if r.get("cat") == "I" and not r.get("base"):
+        h = [v for v in (r.get("hr_lo"), r.get("hr_hi")) if isinstance(v, (int, float))]
+        r["base_txt"] = ("$" + "-$".join(f"{v:g}" for v in sorted(set(h))) + "/hr") if h else "Not disclosed"
     r["ote_txt"] = r.get("ote") or money(r.get("o_lo"), r.get("o_hi")) or "Not disclosed"
     r["cat_label"] = f'{r.get("cat", "?")}: {CATEGORIES.get(r.get("cat"), "Other")}'
     r["stretch_txt"] = "STRETCH" if r.get("stretch") else ""
@@ -183,7 +205,9 @@ def main():
             continue
         r = enrich(r)
         if r["tier"] == "Below target":
-            excluded.append(dict(r, reason="Advertised pay below $90K target at every point of the range"))
+            why = (f"Internship pay below the ${INTERN_BAR}/hr elite bar" if r.get("cat") == "I"
+                   else "Advertised pay below $90K target at every point of the range")
+            excluded.append(dict(r, reason=why))
             continue
         seen[key] = r["co"] + " / " + r["title"]
         active.append(r)
@@ -196,13 +220,18 @@ def main():
         r["id"] = "J" + digest[:6].upper()
 
     paid = lambda r: r["tier"][0] in "ABCD"
+    later = [r for r in active if r.get("lvl") == LATER]
+    interns = [r for r in active if r.get("cat") == "I"]
+    jobs = [r for r in active if r.get("lvl") != LATER and r.get("cat") != "I"]
     tabs = {
-        "Priority Applications": [r for r in active if paid(r) and r["overall"] >= 68][:75],
-        "All Verified NYC Jobs": active,
-        "$120K+ OTE": [r for r in active if r["tier"].startswith("A")],
-        "Early-Career Friendly": [r for r in active if r["hire"] >= 7 and not r.get("stretch")],
-        "E-Commerce & Consumer Tech": [r for r in active if r.get("ecom")],
-        "Unverified Compensation": [r for r in active if r["tier"] == "Unverified"],
+        "Priority Applications": [r for r in jobs if paid(r) and r["overall"] >= 66][:80],
+        "All Entry-Level NYC Jobs": jobs,
+        "Entry - 0 Yrs Confirmed": [r for r in jobs if str(r.get("lvl", "")).startswith("Entry")],
+        "Internships (Winter-Spring 27)": interns,
+        "$120K+ OTE": [r for r in jobs if r["tier"].startswith("A")],
+        "E-Commerce & Consumer Tech": [r for r in jobs + interns if r.get("ecom")],
+        "Unverified Compensation": [r for r in jobs + interns if r["tier"] == "Unverified"],
+        "Later - Needs Experience": later,
     }
 
     wb = Workbook()
@@ -214,8 +243,12 @@ def main():
         ("NYC Sales / AI / GTM / E-Commerce Job Search — Master Workbook", True),
         (f"Last rebuilt: {now} (container clock, UTC)", False),
         ("", False),
-        (f"Unique active NYC openings in database: {len(active)}", True),
+        (f"Entry-level NYC jobs (0 yrs OK or not stated): {len(jobs)}", True),
+        (f"Internships (winter/spring 2027, ${INTERN_BAR}+/hr bar): {len(interns)}", True),
+        (f"Saved for later - need prior sales/SDR experience: {len(later)}", False),
+        ("Compensation tiers (entry-level jobs + internships):", False),
     ]
+    tiers = Counter(r["tier"] for r in jobs + interns)
     for t in sorted(tiers):
         lines.append((f"   {t}: {tiers[t]}", False))
     lines += [
@@ -227,7 +260,9 @@ def main():
         ("• 'Near target' = the advertised range reaches $90K+ but its midpoint is below $90K. Kept for review, never put in Priority.", False),
         ("• Verification: this cloud session could not open job pages directly (network policy). Every row was checked through web-search results that index the posting's own text. "
          "'Official ATS' means the indexed page was the employer's own careers/ATS page; 'Aggregator' means Built In, LinkedIn, Wellfound, etc. Re-open the link before applying.", False),
-        ("• STRETCH = requirements exceed a new grad's profile (e.g., 2+ yrs closing). Included only when exceptional.", False),
+        ("• Experience Level: 'Entry - 0 yrs' = posting says new grad / entry / 0 yrs; 'customer-facing counts' = asks for customer-facing or general work experience your 6 yrs at Millie's covers; 'Not stated' = typical entry SDR/BDR. Roles needing prior SDR/closing experience are in 'Later - Needs Experience'.", False),
+        (f"• Internships: winter 2026-27 or spring 2027 start, NYC, sales/GTM/BD/partnerships, pay at least ${INTERN_BAR}/hr ('Elite' = $45+/hr).", False),
+        ("• STRETCH = requirements exceed a new grad's profile. Included only when exceptional.", False),
         ("• Suppression list (companies you already researched) is applied automatically; matches appear in Excluded / Closed.", False),
     ]
     for i, (text, bold) in enumerate(lines, 1):
