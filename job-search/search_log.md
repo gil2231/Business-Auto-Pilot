@@ -32,3 +32,8 @@ Environment note: direct page loads (Greenhouse/Lever/Ashby APIs, Built In, Link
 - Creator economy: LTK, Linqia, Captiv8, Superfiliate, Howl, Mavely, Later, CreatorIQ, Grin
 - Handshake, WayUp, RippleMatch, Indeed, ZipRecruiter, Glassdoor (not searched directly)
 - More VC boards: Forerunner, Lightspeed, Kleiner, Felicis, Bessemer, Battery, Work-Bench, Bowery, BBG, Harlem Capital
+
+## Round 2 (Oct 14, evening) - refocused on 0 years of experience + elite winter/spring internships
+- ~120 searches: winter/spring 2027 sales/BD/GTM internships (NYC), new-grad/entry SDR/BDR/GTM roles, YC "new grads ok", Handshake/WayUp/RippleMatch, GTM/Commercial Associate programs, expert networks, big-company 2027 programs, and requirement checks on top-ranked roles.
+- Result: 0 internships met the $35/hr + winter/spring + NYC sales bar (near misses logged in Excluded).
+- Roles that turned out to need prior SDR/sales experience were moved to the "Later - Needs Experience" tab.
