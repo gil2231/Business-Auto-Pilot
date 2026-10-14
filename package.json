@@ -1,0 +1,18 @@
+{
+  "name": "business-auto-pilot",
+  "version": "1.0.0",
+  "description": "Self-hosted business workflow automation: CRM, tasks, invoicing, approvals and a durable workflow engine in one zero-dependency package.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch src/server.js",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.js\"",
+    "seed": "node --disable-warning=ExperimentalWarning src/seed.js"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
