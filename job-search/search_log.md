@@ -22,3 +22,13 @@ Environment note: direct page loads (Greenhouse/Lever/Ashby APIs, Built In, Link
 | 28-31 | 15:35 | ashby commercial AE, BDR uncapped, Whatnot, bilingual Spanish SDR | Whatnot, FloQast, Flex, Pillar, Bisnow, AssemblyAI, Vercel |
 | 32-35 | 15:45 | rippling/gem/workable ATS SDR NYC; ashby AI SDR; greenhouse BDR fintech | Vcheck x2, SuiteOp, Rippling x2, Crafty, Turnkey, Addepar, Box, Yext, Adorama, Amplitude |
 | 36-39 | 15:55 | Loop AI, Trayd, builtinnyc entry-level, builtinnyc founding SDR | doinstruct, Anrok; many closed |
+| 40-120 | 15:00-15:40 | YC/WaaS (AE, BDR, growth, founding sales), VC job boards (a16z, GC, Accel, Index, Redpoint, Insight, Thrive, NFX, Techstars, Lerer Hippeau, Primary, Greycroft, Khosla), Built In NYC category pages (ecommerce, AI, fashion, adtech, fintech, entry-level, BD), Ashby/Greenhouse/Lever keyword sweeps (GTM associate, ADR, partnerships, brand partnerships, inside sales, founding sales, Spanish/LATAM) | ~70 new roles |
+| 120-200 | 15:40-15:50 | Company checks: Whatnot, Fanatics, Toast, Square, Adyen, OpenTable, SevenRooms, Grubhub, Fresho, Klaviyo, Attentive, Rokt, Global-e, Chargeflow, HYPEBEAST, Vanta, Brex, Zocdoc, Google GCS, Bilt, Squarespace, Salesforce, Veeva, Verkada and others | ~30 new roles |
+
+## Not yet covered (next session)
+- Oracle/NetSuite, ServiceNow, Snowflake, Datadog, MongoDB, LinkedIn: 2027 new-grad sales programs (most post Oct-Dec)
+- AdTech majors: The Trade Desk, Magnite, PubMatic, IAS, DoubleVerify, Criteo, Taboola, Teads, Mediaocean, Innovid, Zeta
+- Marketplaces/resale: StockX, GOAT/Grailed, eBay, Etsy, Depop, Vinted US, Rebag, Fashionphile, Archive, Trove, Collectors/PSA, Alt
+- Creator economy: LTK, Linqia, Captiv8, Superfiliate, Howl, Mavely, Later, CreatorIQ, Grin
+- Handshake, WayUp, RippleMatch, Indeed, ZipRecruiter, Glassdoor (not searched directly)
+- More VC boards: Forerunner, Lightspeed, Kleiner, Felicis, Bessemer, Battery, Work-Bench, Bowery, BBG, Harlem Capital
